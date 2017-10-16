@@ -24,6 +24,7 @@ export class DishdetailComponent implements OnInit {
   prev: number;
   next: number;
   commentForm: FormGroup;
+  errMess: string;
 
   formErrors = {
     'name': '',
@@ -50,11 +51,13 @@ export class DishdetailComponent implements OnInit {
 
   ngOnInit() {
     this.dishService.getDishIds()
-      .subscribe(dishIds => this.dishIds = dishIds);
+      .subscribe(dishIds => this.dishIds = dishIds,
+        errmess => this.errMess = errmess);
 
     this.route.params
       .switchMap((params: Params) => this.dishService.getDish(+params['id']))
-      .subscribe(dish => {this.dish = dish; this.setPrevNext(dish.id); });
+      .subscribe(dish => {this.dish = dish; this.setPrevNext(dish.id); },
+        errmess => this.errMess = errmess);
   }
 
   createForm() {
@@ -65,7 +68,8 @@ export class DishdetailComponent implements OnInit {
     });
 
     this.commentForm.valueChanges
-      .subscribe(data => this.onValueChanged(data));
+      .subscribe(data => this.onValueChanged(data),
+      errmess => this.errMess = errmess);
     
     this.onValueChanged(); // (re)set form validation messages
   }
