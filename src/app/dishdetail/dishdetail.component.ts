@@ -20,19 +20,21 @@ import 'rxjs/add/operator/switchMap';
 
 export class DishdetailComponent implements OnInit {
   dish: Dish;
+  dishcopy =  null;
   dishIds: number[];
   prev: number;
   next: number;
   commentForm: FormGroup;
   errMess: string;
+  comment: Comment;
 
   formErrors = {
-    'name': '',
+    'author': '',
     'comment': ''
   };
 
   validationMessages = {
-    'name': {
+    'author': {
       'required': 'Name is required.',
       'minlength': 'Name must be at least 2 characteres long.'
     },
@@ -56,14 +58,14 @@ export class DishdetailComponent implements OnInit {
 
     this.route.params
       .switchMap((params: Params) => this.dishService.getDish(+params['id']))
-      .subscribe(dish => {this.dish = dish; this.setPrevNext(dish.id); },
+      .subscribe(dish => {this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
         errmess => this.errMess = errmess);
   }
 
   createForm() {
     this.commentForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      rate: [5],
+      author: ['', [Validators.required, Validators.minLength(2)]],
+      rating: [5],
       comment: ['', Validators.required]
     });
 
@@ -72,6 +74,19 @@ export class DishdetailComponent implements OnInit {
       errmess => this.errMess = errmess);
     
     this.onValueChanged(); // (re)set form validation messages
+  }
+
+  onSubmit() {
+    this.comment = this.commentForm.value;
+    this.comment.date = new Date().toISOString();
+    this.dishcopy.comments.push(this.comment);
+    this.dishcopy.save()
+      .subscribe(dish => this.dish = dish);
+    this.commentForm.reset({
+      author: '',
+      comment: '',
+      rating: '5'
+    });
   }
 
   onValueChanged(data?: any){
@@ -90,21 +105,6 @@ export class DishdetailComponent implements OnInit {
         }
       }
     }
-  }
-
-  onSubmit() {
-    let comentario: Comment = new Comment();
-    comentario.rating = this.commentForm.value.rate;
-    comentario.comment = this.commentForm.value.comment;
-    comentario.author = this.commentForm.value.name;
-    comentario.date = new Date().toISOString();
-    this.dish.comments.push(comentario);
-
-    this.commentForm.reset({
-      name: '',
-      comment: '',
-      rate: '5'
-    });
   }
 
   setPrevNext(dishId: number) {
