@@ -1,4 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+$lt-gray: #ddd;
+$background-dark: #512DA8;
+$background-light: #9575CD;
+$background-pale: #D1C4E9;
+$primary-color-dark: #512DA8;
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 body {
@@ -10,4 +15,15 @@ body {
 .container {
     margin: 20px;
     display: flex;
+}
+
+.flex-spacer {
+    flex: 1 1 auto;
+}
+
+.highlight {
+    background-color: $background-pale;
+    border: 1px solid $primary-color-dark;
+    z-index: 1;
+    transform: scale(1.01);
 }
