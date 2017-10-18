@@ -6,7 +6,6 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import { ProcessHTTPMsgService } from './process-httpmsg.service';
-import { baseURL } from '../shared/baseurl';
 
 import 'rxjs/add/operator/delay';
 import 'rxjs/add/observable/of';

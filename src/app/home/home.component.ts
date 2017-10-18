@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private dishService: DishService,
     private promotionService: PromotionService,
-    private LeaderService: LeaderService,
+    private leaderService: LeaderService,
     @Inject ('BaseURL') private BaseURL) { }
 
   ngOnInit() {
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
     this.promotionService.getFeaturedPromotion()
       .subscribe(promotion => this.promotion = promotion,
       promotionerrmess => this.promotionErrMess = <any>promotionerrmess);
-    this.LeaderService.getFeaturedLeader()
+    this.leaderService.getFeaturedLeader()
       .subscribe(leader => this.leader = leader,
         leadererrmess => this.leaderErrMess = <any>leadererrmess);
   }
