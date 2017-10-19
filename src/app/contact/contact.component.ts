@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Feedback, ContactType } from '../shared/feedback';
-import { flyInOut } from '../animations/app.animation';
+import { expand, flyInOut } from '../animations/app.animation';
 import { FeedbackService } from '../services/feedback.service';
 
 @Component({
@@ -14,7 +14,8 @@ import { FeedbackService } from '../services/feedback.service';
     'style': 'display: block'
   },
   animations: [
-    flyInOut()
+    flyInOut(),
+    expand()
   ]
 })
 
@@ -22,6 +23,7 @@ export class ContactComponent implements OnInit {
 
   feedbackForm: FormGroup;
   feedback: Feedback;
+  feedbackCopy: Feedback;
   contactType = ContactType;
   formErrors = {
     'firstname': '',
@@ -100,18 +102,18 @@ export class ContactComponent implements OnInit {
   onSubmit(){
     this.feedback = this.feedbackForm.value;
     this.feedbackService.submitFeedback(this.feedback)
-    .subscribe(feedback => this.feedback = feedback,
+    .subscribe(feedback => this.feedbackCopy = feedback,
       feedbackerrmess => this.feedbackErrMess = <any>feedbackerrmess);
-    console.log(this.feedback);
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
-      telnum: '',
+      telnum: 0,
       email: '',
       agree: false,
       contacttype: 'None',
       message: ''
     });
+    setTimeout(() => {this.feedback = null; this.feedbackCopy = null; }, 5000);
   }
 
 }
